@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { getTalkUrl } from '@/apis/aircode'
-import { getAiLogs, downloadFile } from './index'
+import { getAiLogs } from './index'
 import { onMounted, ref } from 'vue'
-import axios from 'axios'
-import fileDownload from 'js-file-download'
 
 const logs = ref<Record<string, any>[]>()
 

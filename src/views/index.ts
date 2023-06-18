@@ -1,7 +1,6 @@
 import {
   type FormRules
 } from 'naive-ui'
-import { saveAs } from 'file-saver';
 const localStorageKey = 'aigc_log'
 
 export const rules: FormRules = {
@@ -30,25 +29,3 @@ export function setInfo(key: string, info: Record<string, any>) {
   window.localStorage.setItem(localStorageKey, JSON.stringify(existInfo))
 }
 
-
-
-export async function downloadFile(url: string) {
-  try {
-    // 使用fetch获取文件内容
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    // 将文件内容转换为Blob
-    const blob = await response.blob();
-
-    // 从URL中获取文件名
-    const fileName = url.split('/').pop();
-
-    // 使用FileSaver库保存文件
-    saveAs(blob, fileName);
-  } catch (error) {
-    console.error('下载文件出错:', error);
-  }
-}
