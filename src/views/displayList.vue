@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { getTalkUrl } from '@/apis/aircode'
+import { useGetTalkUrl } from '@/apis/aircode'
+import { NSpin } from 'naive-ui'
 import { getAiLogs } from './index'
 import { onMounted, ref } from 'vue'
+
+const { loading, fetchHandle } = useGetTalkUrl()
 
 const logs = ref<Record<string, any>[]>()
 
@@ -14,24 +17,29 @@ onMounted(() => {
 })
 
 async function downloadVideo(id: string) {
-  const { url } = await getTalkUrl({
+  const { url } = await fetchHandle({
     id
   })
-  window.location.href = url
+  if (url) {
+    window.location.href = url
+  }
+
   // window.open(url)
 }
 </script>
 <template>
-  <div class="flex flex-between">
-    <p>已生成的视频</p>
-    <span @click="refreshLog">刷新</span>
-  </div>
-  <div>
-    <div v-for="item in logs" class="flex flex-between" :key="item.id">
-      <span>{{ item.text }}</span>
-      <span @click="downloadVideo(item.id)">打开视频</span>
+  <n-spin :show="loading">
+    <div class="flex flex-between">
+      <p>已生成的视频</p>
+      <span @click="refreshLog">刷新</span>
     </div>
-  </div>
+    <div>
+      <div v-for="item in logs" class="flex flex-between" :key="item.id">
+        <span>{{ item.text }}</span>
+        <span @click="downloadVideo(item.id)">打开视频</span>
+      </div>
+    </div>
+  </n-spin>
 </template>
 <style lang="less" scoped>
 p {
