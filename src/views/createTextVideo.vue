@@ -1,17 +1,32 @@
 <script setup lang="ts">
-import { NButton, NForm, NFormItem, NInput, NUpload, type FormInst, NImage, NSpin } from 'naive-ui'
-import DisplayList from './displayList.vue'
+import {
+  NButton,
+  NForm,
+  NFormItem,
+  NInput,
+  NUpload,
+  type FormInst,
+  NImage,
+  NSpin,
+  NSelect,
+  useMessage
+} from 'naive-ui'
 import { useCreateTalk } from '@/apis/aircode'
 import { ref } from 'vue'
+import { VoiceList } from './index'
+const router = useRouter()
 
 import { rules, setInfo } from './index'
+import { useRouter } from 'vue-router'
+import { ERouterName } from '@/router/type'
 const formRef = ref<FormInst | null>(null)
-const listVisible = ref(true)
 const { createHandle, loading } = useCreateTalk()
+const message = useMessage()
 
 const formValue = ref({
   image: '',
-  text: ''
+  text: '',
+  voice_id: 'zh-CN-YunyangNeural'
 })
 
 async function handleValidateClick() {
@@ -21,14 +36,18 @@ async function handleValidateClick() {
     }
 
     const createResult = await createHandle(formValue.value)
-    listVisible.value = false
-    setInfo(createResult.result.id, {
-      ...formValue.value,
-      id: createResult.result.id
-    })
-    setTimeout(() => {
-      listVisible.value = true
-    })
+    if (createResult.result.id) {
+      setInfo(createResult.result.id, {
+        ...formValue.value,
+        id: createResult.result.id
+      })
+      router.push({
+        name: ERouterName.videoList
+      })
+    }
+    if (createResult.result.description) {
+      message.error(createResult.result.description)
+    }
   })
 }
 
@@ -44,7 +63,6 @@ function imageUploadFinish(params: any) {
 <template>
   <n-spin :show="loading">
     <section class="aigc-root">
-      <h1>AICG Demo. 仅供学习使用</h1>
       <n-form ref="formRef" :label-width="80" :rules="rules" :model="formValue">
         <n-form-item label="人脸素材" path="image">
           <n-upload
@@ -53,25 +71,30 @@ function imageUploadFinish(params: any) {
             @finish="imageUploadFinish"
             :show-file-list="false"
           >
-            <n-button>上传文件</n-button>
-            <n-image width="300" style="margin-top: 10px" :src="formValue.image"></n-image>
+            <div
+              v-if="!formValue.image"
+              style="width: calc(100vw - 32px)"
+              class="w-[100%] h-20 bg-[gray] text-center leading-10"
+            >
+              点击上传人脸
+            </div>
+            <img v-else class="w-[100%]" style="margin-top: 10px" :src="formValue.image" />
           </n-upload>
         </n-form-item>
         <n-form-item label="视频文案" path="text">
           <n-input v-model:value="formValue.text" placeholder="" type="textarea" />
         </n-form-item>
+        <n-form-item label="选择声音" path="voice_id">
+          <n-select v-model:value="formValue.voice_id" :options="VoiceList" />
+        </n-form-item>
         <n-form-item>
           <n-button attr-type="button" @click="handleValidateClick"> 提交 </n-button>
         </n-form-item>
       </n-form>
-      <DisplayList v-if="listVisible" />
     </section>
   </n-spin>
 </template>
 <style lang="less" scoped>
-.aigc-root {
-  padding: 16px;
-}
 h1 {
   text-align: center;
 }

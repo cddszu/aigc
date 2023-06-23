@@ -29,3 +29,10 @@ export function setInfo(key: string, info: Record<string, any>) {
   window.localStorage.setItem(localStorageKey, JSON.stringify(existInfo))
 }
 
+
+export const VoiceList = [
+  {value: "zh-CN-YunyangNeural", label: "播音男声"},
+  {value: "zh-CN-XiaochenNeural", label: "播音女声"},
+  {value: "zh-CN-henan-YundengNeural", label: "河南男声"},
+  {value: "zh-CN-liaoning-XiaobeiNeural", label: "东北女声"},
+]

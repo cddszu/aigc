@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useGetTalkUrl } from '@/apis/aircode'
-import { NSpin } from 'naive-ui'
+import { NSpin, NList, NListItem } from 'naive-ui'
 import { getAiLogs } from './index'
 import { onMounted, ref } from 'vue'
 
 const { loading, fetchHandle } = useGetTalkUrl()
 
 const logs = ref<Record<string, any>[]>()
+
+const videoUrl = ref('')
 
 function refreshLog() {
   logs.value = Object.values(getAiLogs())
@@ -21,24 +23,24 @@ async function downloadVideo(id: string) {
     id
   })
   if (url) {
-    window.location.href = url
+    videoUrl.value = url
   }
-
-  // window.open(url)
 }
 </script>
 <template>
   <n-spin :show="loading">
     <div class="flex flex-between">
-      <p>已生成的视频</p>
-      <span @click="refreshLog">刷新</span>
+      <h1 class="text-lg">已生成的视频</h1>
     </div>
-    <div>
-      <div v-for="item in logs" class="flex flex-between" :key="item.id">
-        <span>{{ item.text }}</span>
-        <span @click="downloadVideo(item.id)">打开视频</span>
-      </div>
-    </div>
+    <NList>
+      <n-list-item v-for="item in logs" class="" :key="item.id">
+        <div class="flex flex-between">
+          <span>{{ item.text }}</span>
+          <span @click="downloadVideo(item.id)">打开视频</span>
+        </div>
+      </n-list-item>
+    </NList>
+    <video class="mt-10" v-if="videoUrl" :src="videoUrl" controls></video>
   </n-spin>
 </template>
 <style lang="less" scoped>
