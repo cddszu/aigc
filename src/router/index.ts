@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { ERouterName } from './type'
 import CreateTextVideo from '../views/createTextVideo.vue'
 import CreateAudioVideo from '../views/createAudioVideo.vue'
 import DisplayList from '../views/displayList.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/create/text',
