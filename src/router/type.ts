@@ -1,5 +1,6 @@
 export enum ERouterName {
   createTextVideo = 'createTextVideo',
   createAudioVideo = 'createAudioVideo',
-  videoList = 'videoList'
+  videoList = 'videoList',
+  login =  'login'
 }

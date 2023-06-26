@@ -18,6 +18,19 @@ export const rules: FormRules = {
   ]
 }
 
+export const loginRules: FormRules = {
+  name: [
+    {
+      required: true,
+    }
+  ],
+  password: [
+    {
+      required: true,
+    }
+  ]
+}
+
 export function getAiLogs(): Record<string, any> {
   const info = window.localStorage.getItem(localStorageKey) || '{}'
   return JSON.parse(info)
@@ -36,3 +49,11 @@ export const VoiceList = [
   {value: "zh-CN-henan-YundengNeural", label: "河南男声"},
   {value: "zh-CN-liaoning-XiaobeiNeural", label: "东北女声"},
 ]
+
+export function getUserFromWindow() {
+  return window.localStorage.getItem('user')
+}
+
+export function setUserToWindow(info: string) {
+  window.localStorage.setItem('user', info)
+}
