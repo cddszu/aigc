@@ -97,6 +97,7 @@ export function useGetTalks() {
     }).
     finally(() => loading.value = false)
   }
+  console.log(123)
   return {
     fetchListHandle,
     loading
